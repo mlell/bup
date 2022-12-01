@@ -1,0 +1,34 @@
+name: MSYS2
+on: [push]
+
+jobs:
+  msys2:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MSYS
+          update: true
+          install: diffutils gcc git make gettext-devel python-devel rsync python-pip
+      - name: Build
+        run: |
+          echo 'Running in MSYS2!'
+
+          export MSYS=winsymlinks:lnk
+          git clone https://github.com/mlell/bup --branch msys2 bup_build
+          cd bup_build
+          ./configure
+          make
+          mv lib/bup/_helpers.{so,dll}  # fix wrong ending created by build process
+          make install PREFIX=../bup
+          cd ..
+          pwd
+          ls -l
+      - name: CI-Archive
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: bup/

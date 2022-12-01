@@ -114,8 +114,9 @@ endif
 man_roff := $(patsubst %.md,%.1,$(man_md))
 man_html := $(patsubst %.md,%.html,$(man_md))
 
+PREFIX?=/usr/local
+
 INSTALL=install
-PREFIX=/usr/local
 MANDIR=$(PREFIX)/share/man
 DOCDIR=$(PREFIX)/share/doc/bup
 BINDIR=$(PREFIX)/bin
